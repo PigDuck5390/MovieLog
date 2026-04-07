@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import MainHeader from "../Main/MainHeader";
 import "../css/VipLounge.css";
 import defaultProfile from "../img/기본프로필.png";
+import { API } from '../api.js';
 
 function VipLounge() {
     const navigate = useNavigate();
@@ -39,12 +40,12 @@ function VipLounge() {
     }, [userName, userId, userPoint]);
 
     useEffect(() => {
-        fetch(`http://192.168.0.228:3000/userprofile/${userId}`)
+        fetch(`${API}/userprofile/${userId}`)
             .then(res => res.json())
             .then(data => {
                 const profile = Array.isArray(data) && data.length > 0 ? data[0].profile : null;
                 if (profile) {
-                    setProfileImg(`http://192.168.0.228:3000${profile}`);
+                    setProfileImg(`${API}${profile}`);
                 }
             });
     }, [userId]);
@@ -52,7 +53,7 @@ function VipLounge() {
     useEffect(() => {
         const host = window.location.hostname;
         const wsUrl = host.startsWith("192.168")
-            ? "ws://192.168.0.228:3001"
+            ? "ws://192.168.0.227:3001"
             : "ws://112.218.47.101:3001";
 
         const ws = new WebSocket(wsUrl);

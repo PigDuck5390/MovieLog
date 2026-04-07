@@ -3,8 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import defaultProfile from "../img/기본프로필.png";
 import { FaCrown } from "react-icons/fa";
-
 import "../css/MyPage.css";
+import { API } from '../api.js';
 
 function MyPage() {
     const navigate = useNavigate();
@@ -19,27 +19,27 @@ function MyPage() {
     useEffect(() => {
         setLoggedInName(userInfo.name);
 
-        fetch(`http://192.168.0.228:3000/userprofile/${userInfo.id}`)
+        fetch(`${API}/userprofile/${userInfo.id}`)
             .then(res => res.json())
             .then(data => {
                 const profilePath = Array.isArray(data) && data.length > 0
                     ? data[0].profile : null;
                 if (profilePath) {
-                    setProfileImg(`http://192.168.0.228:3000${profilePath}`);
+                    setProfileImg(`${API}${profilePath}`);
                 }
             });
     }, []);
 
     //예매 내역 조회
     useEffect(() => {
-        fetch(`http://192.168.0.228:3000/seatlist/${userInfo.id}`)
+        fetch(`${API}/seatlist/${userInfo.id}`)
             .then(res => res.json())
             .then(data => setSeatData(data))
     }, []);
 
     //포인트 
     useEffect(() => {
-        fetch(`http://192.168.0.228:3000/point/${userInfo.id}`, {
+        fetch(`${API}/point/${userInfo.id}`, {
         })
             .then(res => res.json())
             .then(data => setPoint(data));
@@ -69,7 +69,7 @@ function MyPage() {
         formData.append("profile", file);
         formData.append("userId", userInfo.id);
 
-        const res = await fetch("http://192.168.0.228:3000/updateProfile", {
+        const res = await fetch(`${API}/updateProfile`, {
             method: "PUT",
             body: formData
                 }
@@ -78,7 +78,7 @@ function MyPage() {
         const data = await res.json();
 
         if (data.success) {
-            setProfileImg(`http://192.168.0.228:3000${data.profile}`);
+            setProfileImg(`${API}${data.profile}`);
         } else {
             alert("업로드 실패");
         }
@@ -126,12 +126,13 @@ function MyPage() {
                         </div>
 
                         <div className="profile-left">
-                            <img
-                                src={profileImg}
-                                alt="프로필"
-                                className="profile-img"
-                                onClick={() => document.getElementById("profileInput").click()}
-                            />
+                            <label htmlFor="profileInput" style={{ cursor: 'pointer', display: 'block' }}>
+                                <img
+                                    src={profileImg}
+                                    alt="프로필"
+                                    className="profile-img"
+                                />
+                            </label>
                             <input
                                 type="file"
                                 id="profileInput"

@@ -1,0 +1,246 @@
+/* ================================================
+   MOVIELOG — 로그인/회원가입 팝업 모달 (책 양식 스타일)
+   ================================================ */
+
+.auth-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 5, 2, 0.72);
+  backdrop-filter: blur(6px);
+  animation: fadeIn 0.22s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.auth-modal {
+  position: relative;
+  width: 400px;
+  max-width: 94vw;
+  background:
+    radial-gradient(ellipse at 50% 0%, #fdf8ee 0%, #f8efd4 60%, #f0d9a8 100%);
+  border-radius: 8px;
+  padding: 32px 36px 36px;
+  box-shadow:
+    0 28px 60px rgba(0,0,0,0.6),
+    0 0 0 2px #f0ddb8,
+    0 0 0 5px #e0c898,
+    4px 0 0 #f0ddb8,
+    8px 0 0 #e8d0a4;
+  animation: bookOpen 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  /* 좌측 제본 선 */
+  border-left: 4px solid #8a6131;
+}
+
+/* 상단 금장 라인 */
+.auth-modal::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: 8px 8px 0 0;
+  background: linear-gradient(to right, transparent, #d4a64d 30%, #d4a64d 70%, transparent);
+}
+
+/* 양피지 줄 */
+.auth-modal::after {
+  content: '';
+  position: absolute;
+  inset: 12px;
+  background:
+    repeating-linear-gradient(
+      180deg,
+      transparent 0,
+      transparent 27px,
+      rgba(138,97,49,0.1) 27px,
+      rgba(138,97,49,0.1) 28px
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.auth-modal > * { position: relative; z-index: 1; }
+
+/* 닫기 버튼 */
+.auth-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  width: 28px;
+  height: 28px;
+  border: 1px solid rgba(138,97,49,0.35);
+  border-radius: 50%;
+  background: rgba(253,248,238,0.6);
+  color: #6b4c2b;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.18s, color 0.18s;
+}
+
+.auth-close-btn:hover {
+  background: rgba(139,32,18,0.15);
+  color: #8b2012;
+  border-color: rgba(139,32,18,0.4);
+}
+
+/* 탭 */
+.auth-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 18px;
+  border-bottom: 1px dashed rgba(138,97,49,0.35);
+  padding-bottom: 12px;
+}
+
+.auth-tab {
+  flex: 1;
+  padding: 7px 0;
+  background: none;
+  border: none;
+  font-family: var(--font-serif, 'Noto Serif KR', serif);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: rgba(90,58,34,0.5);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.18s, border-color 0.18s;
+}
+
+.auth-tab.active {
+  color: #2c1d0e;
+  border-bottom: 2px solid #d4a64d;
+}
+
+.auth-tab:hover:not(.active) {
+  color: #5a3a22;
+}
+
+/* 펜 아이콘 */
+.auth-pen-icon {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+  margin: 0 auto 16px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+  animation: quillWrite 2.8s ease-in-out infinite;
+}
+
+/* 폼 */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.auth-title {
+  font-family: var(--font-serif, 'Noto Serif KR', serif);
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  color: #2c1d0e;
+  margin: 0 0 18px;
+  text-align: center;
+}
+
+.auth-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #7a5a35;
+  margin-top: 10px;
+}
+
+.auth-input {
+  padding: 9px 12px;
+  border-radius: 5px;
+  border: 1px solid rgba(138,97,49,0.35);
+  border-bottom: 2px solid rgba(138,97,49,0.5);
+  background: rgba(253,248,238,0.7);
+  font-size: 14px;
+  font-family: var(--font-sans, 'Noto Sans KR', sans-serif);
+  color: #2c1d0e;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.auth-input::placeholder {
+  color: rgba(138,97,49,0.4);
+}
+
+.auth-input:focus {
+  border-color: #8a6131;
+  border-bottom-color: #d4a64d;
+  background: rgba(253,248,238,1);
+  box-shadow: 0 0 0 3px rgba(212,166,77,0.18), 0 2px 5px rgba(0,0,0,0.08);
+}
+
+/* 제출 버튼 */
+.auth-submit-btn {
+  margin-top: 20px;
+  padding: 12px 0;
+  width: 100%;
+  background: linear-gradient(to bottom, #9c6e38 0%, #5a3a1f 100%);
+  color: #fde8c0;
+  font-family: var(--font-serif, 'Noto Serif KR', serif);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  border: 1px solid rgba(0,0,0,0.35);
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.18);
+  transition: filter 0.18s, transform 0.16s, box-shadow 0.18s;
+}
+
+.auth-submit-btn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+  box-shadow:
+    0 7px 18px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.22),
+    0 0 10px rgba(212,166,77,0.2);
+}
+
+.auth-submit-btn:active {
+  transform: translateY(1px);
+  filter: brightness(0.92);
+}
+
+/* 전환 링크 */
+.auth-switch {
+  margin-top: 14px;
+  text-align: center;
+  font-size: 12px;
+  color: #7a5a35;
+}
+
+.auth-switch span {
+  color: #8a6131;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.18s;
+}
+
+.auth-switch span:hover {
+  color: #d4a64d;
+}

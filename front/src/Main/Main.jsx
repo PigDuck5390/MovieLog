@@ -1,7 +1,8 @@
 import MainHeader from '../Main/MainHeader.jsx'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import '../css/Main.css'
+import { API } from '../api.js'
 
 import cgv from '../img/cgv 소형 아이콘.png'
 import lotte from '../img/롯데시네마 소형아이콘.png'
@@ -9,249 +10,169 @@ import megabox from '../img/메가박스 소형 아이콘.png'
 
 import ad from '../../../back/upload/video/아바타 예고편.mp4'
 
-function Main() {
-  const navigate = useNavigate();
 
+const FALLBACK_IMG_INNER = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjI3MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTgwIiBoZWlnaHQ9IjI3MCIgZmlsbD0iIzhBNjEzMSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjE0IiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZmlsbD0iI2ZkZjBkNCI+UE9TVEVSPC90ZXh0Pjwvc3ZnPg=='
+
+function MovieEntry({ movie, rank, onReserve }) {
+  if (!movie) return null
+  return (
+    <div className="movie-row">
+      <div className="poster-wrap">
+        <img
+          src={`${API}${movie.poster}`}
+          alt={movie.title}
+          className="poster-img"
+          onError={e => { e.currentTarget.src = FALLBACK_IMG_INNER }}
+        />
+        <div className="rank-badge">{rank}위</div>
+      </div>
+      <div className="desc">
+        <h1>{movie.title}</h1>
+        <span>{movie.short_description}</span>
+        <button className="quick-reserv" onClick={() => onReserve(movie.movie_id)}>
+          바로 예매하기
+        </button>
+      </div>
+    </div>
+  )
+}
+
+function Main() {
+  const navigate = useNavigate()
   const { state: userInfo } = useLocation()
   const [movieData, setMovieData] = useState([])
-  const [page, setPage] = useState(0);
-
+  const [page, setPage] = useState(0)
   const [showAd, setShowAd] = useState(false)
 
-  useEffect(() => { //영화정보 조회
-    fetch("http://192.168.0.228:3000/movieinfo")
+  // 두 단계 페이지 플립 상태
+  // dir: 'next' | 'prev' | null
+  // phase: 'out' | 'in' | null
+  const [flipState, setFlipState] = useState({ dir: null, phase: null })
+  const flipBusyRef = useRef(false)
+
+  useEffect(() => {
+    fetch(`${API}/movieinfo`)
       .then(response => response.json())
       .then(data => setMovieData(data))
-  }, [movieData])
+  }, [])
 
- useEffect(() => {
-    const lastClosed = localStorage.getItem("adClosedAt");
+  useEffect(() => {
+    const lastClosed = localStorage.getItem('adClosedAt')
+    if (!lastClosed) { setShowAd(true); return }
+    if (Date.now() - Number(lastClosed) > 60 * 60 * 1000) setShowAd(true)
+  }, [])
 
-    if (!lastClosed) {
-      setShowAd(true);  // 광고 본 적 없음 → 보여줌
-      return;
-    }
+  // 페이지별 4개씩
+  const pageSize = 4
+  const startIndex = page * pageSize
+  const pageMovies = movieData.slice(startIndex, startIndex + pageSize)
 
-    const diff = Date.now() - Number(lastClosed);
+  const leftTop    = pageMovies[0]
+  const leftBottom = pageMovies[2]
+  const rightTop   = pageMovies[1]
+  const rightBottom = pageMovies[3]
 
-    if (diff > 24 * 60 * 60 * 1000) {
-      // 24시간 지남 → 다시 광고 보여줌
-      setShowAd(true);
-    }
-  }, []);
+  const maxPage = Math.max(0, Math.ceil(movieData.length / pageSize) - 1)
 
+  // 두 단계 플립 애니메이션 (22ms out + 22ms in = 빠른 책 넘김)
+  function changePage(dir) {
+    if (flipBusyRef.current) return
+    flipBusyRef.current = true
 
-  //페이지별 4개씩 잘라 쓰기
-  const pageSize = 4;
-  const startIndex = page * pageSize;
-  const pageMovies = movieData.slice(startIndex, startIndex + pageSize);
+    // 1단계: 해당 페이지 접힘 (out) + 반대 페이지 그림자
+    setFlipState({ dir, phase: 'out' })
 
-  // 안전하게 자리 뽑아오기 (없을 수도 있으니까)
-  const leftTop = pageMovies[0]; // 1위, 5위, 9위 ...
-  const leftBottom = pageMovies[2]; // 3위, 7위 ...
-  const rightTop = pageMovies[1]; // 2위, 6위 ...
-  const rightBottom = pageMovies[3]; // 4위, 8위 ...
+    setTimeout(() => {
+      // 컨텐츠 교체
+      setPage(prev => dir === 'next' ? prev + 1 : prev - 1)
+      // 2단계: 새 페이지 펼쳐짐 (in)
+      setFlipState({ dir, phase: 'in' })
 
-  const maxPage = Math.max(0, Math.ceil(movieData.length / pageSize) - 1);
+      setTimeout(() => {
+        setFlipState({ dir: null, phase: null })
+        flipBusyRef.current = false
+      }, 260)
+    }, 220)
+  }
 
-  //바로 예매하기
+  // 플립 클래스 계산 (넘기는 쪽 / 그림자 받는 쪽)
+  const rightPageClass =
+    flipState.dir === 'next'
+      ? (flipState.phase === 'out' ? 'flip-out' : flipState.phase === 'in' ? 'flip-in' : '')
+      : ''
+
+  const leftPageClass =
+    flipState.dir === 'prev'
+      ? (flipState.phase === 'out' ? 'flip-out' : flipState.phase === 'in' ? 'flip-in' : '')
+      : ''
+
   const Reserve = (movie_id) => {
-    navigate('/reservation', { state: {
-        movieId: movie_id,
-        name: userInfo?.name,
-        id: userInfo?.id
-          }
-        }
-      );
-    };
+    navigate('/reservation', {
+      state: { movieId: movie_id, name: userInfo?.name, id: userInfo?.id }
+    })
+  }
 
-    function closeAd(){
-      localStorage.setItem("adClosedAt", Date.now());
-      setShowAd(false)
-    }
-
+  function closeAd() {
+    localStorage.setItem('adClosedAt', Date.now())
+    setShowAd(false)
+  }
 
   return (
     <>
       <MainHeader />
-
       <main className="main-area">
-       {/* 전체 화면 광고 모달 */}
-       {showAd && (
-        <div className="ad-modal">
-          <div className="ad-content">
 
-            <video
-              src={ad}
-              autoPlay
-              muted
-              loop
-              className="ad-video"
-            />
-
-            <button className="ad-close-btn" onClick={closeAd}>
-              close ad
-            </button>
+        {/* 광고 모달 */}
+        {showAd && (
+          <div className="ad-modal">
+            <div className="ad-content">
+              <video src={ad} autoPlay muted loop className="ad-video" />
+              <button className="ad-close-btn" onClick={closeAd}>close ad</button>
+            </div>
           </div>
-        </div>
-       )}
-        
-        
+        )}
+
         <div className="book-wrapper">
           <div className="open-book">
             <div className="book-spine" />
 
-            {/* ===== 왼쪽 페이지 (1위 / 3위, 5위 / 7위 ...) ===== */}
-            <div className="page page-left">
-              {/* 상단: 현재 페이지의 첫 번째 순위 (1위, 5위, 9위 ...) */}
-              {leftTop && (
-                <div className="movie-row">
-                  <div className="poster-wrap">
-                    <img
-                      src={`http://192.168.0.228:3000${leftTop.poster}`}
-                      alt={leftTop.title}
-                      className="poster-img"
-                    />
-                    {/* ✅ 순위 숫자: 페이지에 따라 1,5,9... */}
-                    <div className="rank-badge">
-                      {`${startIndex + 1}위`}
-                    </div>
-                  </div>
-
-                  <div className="desc">
-                    <h1>{leftTop.title}</h1>
-                    <span>{leftTop.short_description}</span>
-                  </div>
-
-                  <button
-                    className="quick-reserv"
-                    onClick={() => Reserve(leftTop.movie_id)}
-                  >
-                    바로 예매하기
-                  </button>
-                </div>
-              )}
-
-              {/* 하단: 현재 페이지의 세 번째 순위 (3위, 7위, 11위 ...) */}
-              {leftBottom && (
-                <div className="movie-row">
-                  <div className="poster-wrap">
-                    <img
-                      src={`http://192.168.0.228:3000${leftBottom.poster}`}
-                      alt={leftBottom.title}
-                      className="poster-img"
-                    />
-                    <div className="rank-badge">
-                      {`${startIndex + 3}위`}
-                    </div>
-                  </div>
-
-                  <div className="desc">
-                    <h1>{leftBottom.title}</h1>
-                    <span>{leftBottom.short_description}</span>
-                  </div>
-
-                  <button
-                    className="quick-reserv"
-                    onClick={() => Reserve(leftBottom.movie_id)}
-                  >
-                    바로 예매하기
-                  </button>
-                </div>
-              )}
+            {/* ===== 왼쪽 페이지 ===== */}
+            <div className={`page page-left ${leftPageClass}`}>
+              <MovieEntry movie={leftTop}    rank={startIndex + 1} onReserve={Reserve} />
+              <MovieEntry movie={leftBottom} rank={startIndex + 3} onReserve={Reserve} />
             </div>
 
-            {/* ===== 오른쪽 페이지 (2위 / 4위, 6위 / 8위 ...) ===== */}
-            <div className="page page-right">
-              {/* 상단: 두 번째 순위 (2위, 6위, 10위 ...) */}
-              {rightTop && (
-                <div className="movie-row">
-                  <div className="poster-wrap">
-                    <img
-                      src={`http://192.168.0.228:3000${rightTop.poster}`}
-                      alt={rightTop.title}
-                      className="poster-img"
-                    />
-                    <div className="rank-badge">
-                      {`${startIndex + 2}위`}
-                    </div>
-                  </div>
-
-                  <div className="desc">
-                    <h1>{rightTop.title}</h1>
-                    <span>{rightTop.short_description}</span>
-                  </div>
-
-                  <button
-                    className="quick-reserv"
-                    onClick={() => Reserve(rightTop.movie_id)}
-                  >
-                    바로 예매하기
-                  </button>
-                </div>
-              )}
-
-              {/* 하단: 네 번째 순위 (4위, 8위, 12위 ...) */}
-              {rightBottom && (
-                <div className="movie-row">
-                  <div className="poster-wrap">
-                    <img
-                      src={`http://192.168.0.228:3000${rightBottom.poster}`}
-                      alt={rightBottom.title}
-                      className="poster-img"
-                    />
-                    <div className="rank-badge">
-                      {`${startIndex + 4}위`}
-                    </div>
-                  </div>
-
-                  <div className="desc">
-                    <h1>{rightBottom.title}</h1>
-                    <span>{rightBottom.short_description}</span>
-                  </div>
-
-                  <button
-                    className="quick-reserv"
-                    onClick={() => Reserve(rightBottom.movie_id)}
-                  >
-                    바로 예매하기
-                  </button>
-                </div>
-              )}
+            {/* ===== 오른쪽 페이지 ===== */}
+            <div className={`page page-right ${rightPageClass}`}>
+              <MovieEntry movie={rightTop}    rank={startIndex + 2} onReserve={Reserve} />
+              <MovieEntry movie={rightBottom} rank={startIndex + 4} onReserve={Reserve} />
             </div>
           </div>
 
-          {/* ===== 책 양옆 하단 동그란 페이지 넘김 버튼 ===== */}
+          {/* 페이지 넘김 버튼 — 책 중앙 좌우 */}
           <button
-            className={`page-arrow page-prev ${page === 0 ? "disabled" : ""}`}
-            onClick={() => page > 0 && setPage(page - 1)}
+            className={`page-arrow page-prev ${page === 0 ? 'disabled' : ''}`}
+            onClick={() => page > 0 && changePage('prev')}
             aria-label="이전 페이지"
           />
-
           <button
-            className={`page-arrow page-next ${page === maxPage ? "disabled" : ""
-              }`}
-            onClick={() => page < maxPage && setPage(page + 1)}
+            className={`page-arrow page-next ${page === maxPage ? 'disabled' : ''}`}
+            onClick={() => page < maxPage && changePage('next')}
             aria-label="다음 페이지"
           />
         </div>
 
-        {/* ===== 짜치는 협력사 아이콘 ===== */}
+        {/* 협력사 */}
         <div className="cinema-wrapper">
           <span className="cinema-label">협력사 : </span>
-          <img src={cgv} className="cinema-icon"/>
-          <img src={lotte} className="cinema-icon"/>
-          <img src={megabox} className="cinema-icon"/>
-
+          <img src={cgv}    className="cinema-icon" onClick={() => window.location.href = 'https://cgv.co.kr/'} alt="CGV" />
+          <img src={lotte}  className="cinema-icon" onClick={() => window.location.href = 'https://www.lottecinema.co.kr/NLCHS'} alt="롯데시네마" />
+          <img src={megabox} className="cinema-icon" onClick={() => window.location.href = 'https://www.megabox.co.kr/'} alt="메가박스" />
         </div>
-        
+
       </main>
     </>
-  );
-
-
+  )
 }
-
-
 
 export default Main

@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap');
+
+/* ================================================
+   CSS 변수 (책 테마 전용 컬러 팔레트)
+   ================================================ */
+:root {
+  --binding-darkest : #120804;
+  --binding-dark    : #1e100a;
+  --binding         : #3b2413;
+  --binding-mid     : #5a3a1f;
+  --binding-warm    : #8a6131;
+  --binding-light   : #c47533;
+
+  --parchment-shadow: #d9ba84;
+  --parchment-deep  : #e8c98a;
+  --parchment       : #f0d9a8;
+  --parchment-light : #f8f0dc;
+  --parchment-bright: #fdf6e3;
+
+  --gold-dark : #a87c2e;
+  --gold      : #d4a64d;
+  --gold-bright: #f0c060;
+  --gold-pale : #fae5aa;
+
+  --ink-dark  : #1c0d05;
+  --ink       : #2c1d0e;
+  --ink-mid   : #4a3622;
+  --ink-light : #6b4c2b;
+
+  --wax-dark  : #6b1208;
+  --wax       : #8b2012;
+  --wax-bright: #b83020;
+
+  --font-serif: 'Noto Serif KR', Georgia, 'Times New Roman', serif;
+  --font-sans : 'Noto Sans KR', system-ui, -apple-system, sans-serif;
+}
+
+/* ================================================
+   전역 리셋 & 기본
+   ================================================ */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background-color: var(--binding);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ================================================
+   스크롤바
+   ================================================ */
+::-webkit-scrollbar        { width: 7px; }
+::-webkit-scrollbar-track  { background: var(--binding-dark); }
+::-webkit-scrollbar-thumb  { background: var(--binding-warm); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--binding-light); }
+
+/* ================================================
+   전역 애니메이션 키프레임
+   ================================================ */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes shimmer {
+  0%   { background-position: -300% center; }
+  100% { background-position:  300% center; }
+}
+@keyframes goldPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(212,166,77,0); }
+  50%       { box-shadow: 0 0 0 6px rgba(212,166,77,0.35); }
+}
+@keyframes stampPop {
+  0%   { transform: scale(0.4) rotate(-15deg); opacity: 0; }
+  65%  { transform: scale(1.12) rotate(3deg);  opacity: 1; }
+  100% { transform: scale(1)    rotate(0deg);  opacity: 1; }
+}
+@keyframes inkDraw {
+  from { width: 0; opacity: 0; }
+  to   { width: 100%; opacity: 1; }
+}
+@keyframes bookOpen {
+  0%   { transform: perspective(1400px) rotateX(10deg) scale(0.88); opacity: 0; }
+  100% { transform: perspective(1400px) rotateX(0deg)  scale(1);    opacity: 1; }
+}
+@keyframes quillWrite {
+  0%, 100% { transform: rotate(-12deg) translateY(0); }
+  40%       { transform: rotate(-18deg) translateY(-3px) translateX(2px); }
+  70%       { transform: rotate(-8deg)  translateY(1px)  translateX(-1px); }
+}
+@keyframes seatBounce {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(0.88) translateY(2px); }
+  65%  { transform: scale(1.10) translateY(-4px); }
+  100% { transform: scale(1) translateY(0); }
+}
+@keyframes pageRustle {
+  0%,100% { transform: perspective(800px) rotateY(0deg); }
+  50%      { transform: perspective(800px) rotateY(1.5deg); }
+}
+@keyframes waxDrop {
+  0%   { transform: scale(0) rotate(20deg); opacity: 0; }
+  55%  { transform: scale(1.08) rotate(-3deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg);    opacity: 1; }
+}
+@keyframes floatUp {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-5px); }
+}

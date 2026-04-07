@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import pen from "../img/pen.jpg";
 import "../css/Login.css";
+import { API } from '../api.js';
 
 function Login() {
     const navigate = useNavigate();
@@ -12,7 +13,7 @@ function Login() {
 
     //회원정보 조회
     useEffect(() => {
-        fetch('http://192.168.0.228:3000/userinfo')
+        fetch(`${API}/userinfo`)
             .then(response => response.json())
             .then(data => setUserData(data))
     }, []);

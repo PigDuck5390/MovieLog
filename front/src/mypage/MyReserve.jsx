@@ -2,6 +2,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import MainHeader from "../Main/MainHeader";
 import "../css/MyReserve.css";
+import { API } from '../api.js';
 
 function MyReserve() {
     const navigate = useNavigate();
@@ -9,10 +10,10 @@ function MyReserve() {
     const [seatData, setSeatData] = useState([]);
 
     useEffect(() => {
-        fetch(`http://192.168.0.228:3000/seatlist/${userInfo.id}`)
+        fetch(`${API}/seatlist/${userInfo.id}`)
             .then(response => response.json())
             .then(data => setSeatData(data))
-    }, [seatData]);
+    }, []);
 
     //개인정보 변경 이동
     function goMyInfoEdit() {

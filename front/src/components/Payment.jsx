@@ -2,6 +2,7 @@ import MainHeader from '../Main/MainHeader.jsx'
 import { useLocation, useParams, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import "../css/Payment.css";
+import { API } from '../api.js';
 
 function Payment() {
     const { state: userInfo } = useLocation();
@@ -13,7 +14,7 @@ function Payment() {
     console.log(reservInfo)
     
     useEffect(() => {
-        fetch(`http://192.168.0.228:3000/cardinfo/${userInfo.id}`)
+        fetch(`${API}/cardinfo/${userInfo.id}`)
             .then(res => res.json())
             .then(data => setCardData(data));
     }, []);
@@ -40,7 +41,7 @@ function Payment() {
             (item) => String(item.card_defid) === selectedCard
         );
 
-        fetch("http://192.168.0.228:3000/reservcount", {
+        fetch(`${API}/reservcount`, {
             method:"PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ 
@@ -50,7 +51,7 @@ function Payment() {
         }
         )
 
-        fetch("http://192.168.0.228:3000/reserv", {
+        fetch(`${API}/reserv`, {
             method: "POST",
             headers: { "content-type": "application/json" },
             body: JSON.stringify({
@@ -68,7 +69,7 @@ function Payment() {
             })
         })
             .then(() => {
-                return fetch(`http://192.168.0.228:3000/point/add/${userInfo.id}`, {
+                return fetch(`${API}/point/add/${userInfo.id}`, {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ addPoint: seatCount * 10 })

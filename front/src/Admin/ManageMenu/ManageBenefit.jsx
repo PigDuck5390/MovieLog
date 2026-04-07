@@ -1,16 +1,17 @@
 import ManagementHead from '../ManagementHead.jsx'
 import { useState, useEffect } from 'react'
+import { API } from '../../api.js'
 
 function ManageBenefit() {
     const [benefitData, setBenefitData] = useState([])
     const [newImg, setNewImg] = useState(null)
 
-    //혜택 정보 조회
+    // infinite re-render 수정: [] 사용
     useEffect(() => {
-        fetch("http://192.168.0.228:3000/benefitinfo")
+        fetch(`${API}/benefitinfo`)
             .then(response => response.json())
             .then(data => setBenefitData(data))
-    }, [benefitData])
+    }, [])
 
     function upload() {
         if (!newImg) {
@@ -21,18 +22,16 @@ function ManageBenefit() {
         for (let i = 0; i < newImg.length; i++) {
             formData.append('benefitPoster', newImg[i])
         }
-        fetch('http://192.168.0.228:3000/benefit/add', {
+        fetch(`${API}/benefit/add`, {
             method: "POST",
             body: formData
         })
     }
 
     function posterDel(defid) {
-        fetch('http://192.168.0.228:3000/benefit/delete', {
+        fetch(`${API}/benefit/delete`, {
             method: "DELETE",
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ defid: defid })
         })
     }
@@ -72,14 +71,14 @@ function ManageBenefit() {
                                 <div className="admin-card-image-wrap">
                                     <img
                                         className="admin-card-image"
-                                        src={`http://192.168.0.228:3000${item.poster_path}`}
+                                        src={`${API}${item.poster_path}`}
                                         alt={item.poster_name}
                                     />
                                 </div>
                                 <div className="admin-card-actions">
                                     <button
                                         className="admin-button admin-button--danger admin-button--small"
-                                        onClick={(e) => posterDel(item.defid)}
+                                        onClick={() => posterDel(item.defid)}
                                     >
                                         포스터 삭제
                                     </button>

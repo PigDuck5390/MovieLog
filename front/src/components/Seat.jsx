@@ -2,6 +2,7 @@ import MainHeader from '../Main/MainHeader.jsx'
 import { useState, useEffect } from 'react'
 import { useLocation, useParams, useNavigate } from 'react-router-dom'
 import '../css/Seat.css'
+import { API } from '../api.js'
 
 function Seat() {
   const navigate = useNavigate()
@@ -24,7 +25,7 @@ function Seat() {
   const [seatData, setSeatData] = useState([])
 
   useEffect(() => { //예매정보 조회
-    fetch('http://192.168.0.228:3000/seatlist')
+    fetch(`${API}/seatlist`)
       .then(response => response.json())
       .then(data => setSeatData(data))
   }, []);

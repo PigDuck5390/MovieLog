@@ -1,8 +1,8 @@
 import AdminHead from './AdminHead.jsx'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-
 import '../css/Admin.css'
+import { API } from '../api.js'
 
 function Admin() {
     const navigate = useNavigate()
@@ -12,7 +12,7 @@ function Admin() {
     const [adminData, setAdminData] = useState([])
 
     useEffect(() => {
-        fetch("http://192.168.0.228:3000/admin")
+        fetch(`${API}/admin`)
             .then(response => response.json())
             .then(data => setAdminData(data))
     }, [])

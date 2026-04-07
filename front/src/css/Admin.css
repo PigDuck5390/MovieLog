@@ -1,75 +1,78 @@
-/* =========================================
-   공통 레이아웃 (중간 톤 브라운)
-   ========================================= */
+/* ================================================
+   MOVIELOG — 관리자 페이지 (고문서 / 장부 스타일)
+   ================================================ */
 
 .admin-page {
   min-height: 100vh;
-  background: linear-gradient(
-    to bottom,
-    #e7d6c2 0%,
-    #d5c0a3 40%,
-    #c1a181 100%
-  );
-  color: #352015;
+  background:
+    radial-gradient(ellipse at 20% 0%, #6b3a1f 0%, transparent 45%),
+    linear-gradient(170deg, #4a2810 0%, #8a6131 40%, #a97f3f 100%);
+  color: #2c1d0e;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  font-family: "Pretendard", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--font-sans, 'Noto Sans KR', system-ui, sans-serif);
 }
 
+/* 메인 콘텐츠 영역 */
 .admin-main {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 24px 32px 48px;
+  padding: 28px 36px 56px;
   box-sizing: border-box;
+  animation: fadeInUp 0.5s ease both;
 }
 
-/* =========================================
-   헤더 / 네비게이션
-   ========================================= */
-
+/* ── 헤더 (로그인 페이지용) ── */
 .admin-header {
   width: 100%;
-  background: #644027;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    linear-gradient(to bottom, #1e100a 0%, #2f180d 60%, #3b2110 100%);
+  border-bottom: 1px solid rgba(212,166,77,0.15);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.5);
 }
 
 .admin-header-inner {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 16px 32px;
+  padding: 18px 36px;
   box-sizing: border-box;
 }
 
 .admin-header-title {
   margin: 0;
-  font-size: 22px;
+  font-family: var(--font-serif, 'Noto Serif KR', serif);
+  font-size: 20px;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  color: #fff4e3;
+  letter-spacing: 0.14em;
+  color: #fde8c0;
 }
 
+/* ── 관리 헤더 (관리 메뉴 있는 버전) ── */
 .admin-management-header {
   width: 100%;
-  background: #714c30;
-  box-shadow: 0 4px 12px rgba(69, 43, 25, 0.55);
-  z-index: 10;
+  background:
+    linear-gradient(to bottom, #1e100a 0%, #2f180d 60%, #3b2110 100%);
+  box-shadow:
+    0 4px 16px rgba(0,0,0,0.6),
+    0 1px 0 rgba(212,166,77,0.18);
+  z-index: 50;
 }
 
 .admin-management-toolbar {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 12px 32px 16px;
+  padding: 14px 36px 18px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .admin-admin-id {
-  font-size: 14px;
-  color: #fbe0b7;
+  font-size: 12px;
+  color: #c8a878;
+  letter-spacing: 0.08em;
 }
 
 .admin-management-nav {
@@ -78,73 +81,77 @@
   gap: 8px;
 }
 
+/* 네비 버튼 */
 .admin-nav-button {
-  background: #f3e4d1;
-  border: 1px solid rgba(93, 64, 40, 0.45);
-  color: #5a3a22;
-  padding: 6px 14px;
+  background: rgba(240,220,180,0.15);
+  border: 1px solid rgba(212,166,77,0.35);
+  color: #fde8c0;
+  padding: 6px 16px;
   border-radius: 999px;
-  font-size: 13px;
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
   cursor: pointer;
-  transition: transform 0.08s ease-out,
-    box-shadow 0.08s ease-out,
-    background 0.1s ease-out;
+  transition: background 0.18s, border-color 0.18s, transform 0.14s;
 }
 
 .admin-nav-button:hover {
-  background: #fff7eb;
-  box-shadow:
-    0 0 0 1px rgba(187, 130, 75, 0.38),
-    0 4px 10px rgba(85, 55, 32, 0.35);
+  background: rgba(212,166,77,0.28);
+  border-color: rgba(212,166,77,0.65);
   transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
-/* =========================================
-   타이틀 / 섹션
-   ========================================= */
-
+/* ── 섹션 / 타이틀 ── */
 .admin-title {
-  font-size: 26px;
+  font-family: var(--font-serif, 'Noto Serif KR', serif);
+  font-size: 24px;
   font-weight: 800;
-  margin: 18px 0 6px;
-  letter-spacing: 0.06em;
-  color: #472b18;
+  margin: 20px 0 8px;
+  letter-spacing: 0.08em;
+  color: #fde8c0;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+}
+
+.admin-title::after {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 2px;
+  margin: 8px 0 0;
+  background: linear-gradient(to right, #d4a64d, transparent);
 }
 
 .admin-subtitle {
-  font-size: 18px;
+  font-family: var(--font-serif, 'Noto Serif KR', serif);
+  font-size: 16px;
   font-weight: 700;
-  margin: 12px 0 10px;
-  color: #5b3720;
+  margin: 14px 0 10px;
+  color: #fde8c0;
+  letter-spacing: 0.06em;
 }
 
 .admin-description {
-  margin-top: 32px;
-  font-size: 15px;
-  color: #684129;
+  margin-top: 36px;
+  font-size: 14px;
+  color: #c8a878;
   text-align: center;
+  letter-spacing: 0.06em;
 }
 
-.admin-section {
-  margin-top: 18px;
-}
-
+.admin-section { margin-top: 20px; }
 .admin-section--center {
   display: flex;
   justify-content: center;
 }
 
-/* 구분선 */
 .admin-divider {
   border: none;
-  border-top: 1px solid rgba(111, 79, 53, 0.35);
-  margin: 16px 0;
+  border-top: 1px solid rgba(212,166,77,0.2);
+  margin: 18px 0;
 }
 
-/* =========================================
-   폼 / 인풋 / 버튼
-   ========================================= */
-
+/* ── 폼 / 인풋 ── */
 .admin-form {
   display: flex;
   flex-direction: column;
@@ -154,7 +161,7 @@
 .admin-form--columns {
   display: flex;
   flex-wrap: wrap;
-  gap: 18px;
+  gap: 20px;
 }
 
 .admin-form-column {
@@ -164,9 +171,7 @@
   gap: 10px;
 }
 
-.admin-form-column--times {
-  max-width: 360px;
-}
+.admin-form-column--times { max-width: 360px; }
 
 .admin-form-row {
   display: flex;
@@ -175,14 +180,17 @@
 }
 
 .admin-label {
-  font-size: 13px;
-  color: #6f4b2f;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #c8a878;
 }
 
 .admin-label-inline {
-  font-size: 13px;
+  font-size: 12px;
   margin-right: 6px;
-  color: #6f4b2f;
+  color: #c8a878;
 }
 
 .admin-input,
@@ -190,171 +198,145 @@
 .admin-file {
   width: 100%;
   box-sizing: border-box;
-  border-radius: 8px;
-  border: 1px solid rgba(106, 77, 53, 0.65);
-  background: #fbf3e8;
-  padding: 7px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(212,166,77,0.35);
+  background: rgba(253,248,238,0.92);
+  padding: 8px 12px;
   font-size: 13px;
-  color: #3e2719;
+  font-family: var(--font-sans, 'Noto Sans KR', sans-serif);
+  color: #2c1d0e;
   outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .admin-input::placeholder,
 .admin-textarea::placeholder {
-  color: rgba(102, 74, 50, 0.55);
+  color: rgba(138,97,49,0.4);
 }
 
 .admin-input:focus,
 .admin-textarea:focus {
-  border-color: #ce9854;
-  box-shadow: 0 0 0 1px rgba(206, 152, 84, 0.45);
+  border-color: #d4a64d;
+  box-shadow: 0 0 0 3px rgba(212,166,77,0.2);
+  background: #fdf8ee;
 }
 
 .admin-textarea {
   resize: vertical;
-  min-height: 70px;
+  min-height: 72px;
 }
 
-.admin-input--date {
-  cursor: pointer;
-}
-
+/* ── 버튼 ── */
 .admin-button {
-  border-radius: 8px;
-  border: 1px solid rgba(115, 83, 56, 0.6);
-  padding: 6px 12px;
-  font-size: 13px;
+  border-radius: 6px;
+  border: 1px solid rgba(138,97,49,0.5);
+  padding: 6px 14px;
+  font-size: 12.5px;
+  font-weight: 600;
   cursor: pointer;
-  background: #f0dfcc;
-  color: #4a2e1c;
-  transition: background 0.1s ease-out,
-    transform 0.08s ease-out,
-    box-shadow 0.08s ease-out;
+  background: rgba(240,215,170,0.85);
+  color: #3a2010;
+  transition: filter 0.15s, transform 0.12s, box-shadow 0.15s;
+  letter-spacing: 0.04em;
 }
 
 .admin-button:hover {
-  background: #f7eadb;
-  box-shadow: 0 2px 8px rgba(90, 63, 41, 0.35);
+  filter: brightness(1.08);
   transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
 .admin-button--primary {
-  background: #e4a859;
-  border-color: #c48a3e;
-  color: #301b0f;
-  font-weight: 600;
+  background: linear-gradient(to bottom, #d4a64d 0%, #a87c2e 100%);
+  border-color: rgba(100,60,20,0.5);
+  color: #2c1d0e;
 }
 
 .admin-button--primary:hover {
-  background: #f1b566;
+  filter: brightness(1.08);
 }
 
 .admin-button--danger {
-  background: #e46657;
-  border-color: #c54536;
-  color: #fff4ee;
+  background: linear-gradient(to bottom, #c04030 0%, #8b2012 100%);
+  border-color: rgba(80,20,10,0.6);
+  color: #fde8c0;
 }
 
 .admin-button--danger:hover {
-  background: #ee7a6d;
+  filter: brightness(1.1);
 }
 
-.admin-button--small {
-  padding: 4px 10px;
-  font-size: 12px;
-}
+.admin-button--small { padding: 4px 10px; font-size: 12px; }
+.admin-button--tiny  { padding: 2px 8px; font-size: 11px; margin-left: 6px; }
+.admin-add-button    { margin-top: 14px; }
 
-.admin-button--tiny {
-  padding: 2px 8px;
-  font-size: 11px;
-  margin-left: 6px;
-}
-
-.admin-add-button {
-  margin-top: 12px;
-}
-
-/* 로그인 전용 카드 */
-
+/* ── 로그인 카드 ── */
 .admin-login-page {
   display: flex;
   flex-direction: column;
 }
 
 .admin-login-card {
-  margin: 60px auto 40px;
-  max-width: 360px;
+  margin: 70px auto 40px;
+  max-width: 380px;
   width: 100%;
-  padding: 24px 22px 20px;
-  border-radius: 18px;
-  background: radial-gradient(
-    circle at top left,
-    #f0c17e 0,
-    #dda869 30%,
-    #c79b74 55%,
-    #b89573 80%
-  );
+  padding: 36px 32px 32px;
+  border-radius: 8px;
+  background:
+    radial-gradient(ellipse at 50% 0%, #fdf8ee 0%, #f8efd4 60%, #f0d9a8 100%);
   box-shadow:
-    0 18px 34px rgba(84, 58, 37, 0.7),
-    0 0 0 1px rgba(255, 244, 228, 0.45);
+    0 24px 50px rgba(0,0,0,0.55),
+    0 0 0 2px #f0ddb8,
+    0 0 0 5px #e0c898;
+  position: relative;
+  overflow: hidden;
+  animation: bookOpen 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.admin-login-button {
-  width: 100%;
-  margin-top: 14px;
+.admin-login-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(to right, transparent, #d4a64d 30%, #d4a64d 70%, transparent);
 }
 
-/* =========================================
-   카드 / 그리드
-   ========================================= */
+.admin-login-button { width: 100%; margin-top: 16px; }
 
-.admin-grid {
-  display: grid;
-  gap: 14px;
-}
-
-.admin-grid--poster {
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-}
-
-.admin-grid--movies {
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-}
-
-.admin-grid--reserv {
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-}
-
-.admin-grid--users {
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-}
+/* ── 카드 / 그리드 ── */
+.admin-grid { display: grid; gap: 16px; }
+.admin-grid--poster  { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+.admin-grid--movies  { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+.admin-grid--reserv  { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+.admin-grid--users   { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
 
 .admin-card {
-  background: #f9f1e6;
-  border-radius: 14px;
-  padding: 14px 12px 12px;
+  background:
+    radial-gradient(ellipse at 50% 0%, #fdf8ee 0%, #f8efd4 65%, #f0d9a8 100%);
+  border-radius: 10px;
+  padding: 16px 14px;
   box-sizing: border-box;
-  border: 1px solid rgba(111, 79, 53, 0.55);
-  box-shadow: 0 10px 22px rgba(81, 55, 35, 0.4);
-  color: #3f2719;
+  border: 1px solid rgba(180,130,70,0.4);
+  box-shadow:
+    0 10px 24px rgba(0,0,0,0.38),
+    0 0 0 2px rgba(240,215,170,0.5);
+  color: #2c1d0e;
+  position: relative;
+  overflow: hidden;
 }
 
-.admin-card--poster {
-  padding: 10px;
+.admin-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(to right, transparent, #d4a64d 40%, #d4a64d 60%, transparent);
 }
 
-.admin-card--movie {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
+.admin-card--poster { padding: 10px; }
+.admin-card--movie,
 .admin-card--reserv,
-.admin-card--user {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
+.admin-card--user   { display: flex; flex-direction: column; gap: 6px; }
 
 .admin-card-header {
   display: flex;
@@ -364,26 +346,24 @@
   margin-bottom: 4px;
 }
 
-.admin-card-header--user {
-  justify-content: flex-end;
-}
+.admin-card-header--user { justify-content: flex-end; }
 
 .admin-card-title {
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 700;
-  color: #4d2f1c;
+  color: #2c1d0e;
   margin-right: auto;
 }
 
 .admin-card-body {
   font-size: 13px;
-  color: #4c2f1f;
+  color: #4a3622;
 }
 
 .admin-card-image-wrap {
-  border-radius: 10px;
+  border-radius: 8px;
   overflow: hidden;
-  background: #e8d4c0;
+  background: rgba(220,190,140,0.4);
 }
 
 .admin-card-image {
@@ -399,27 +379,22 @@
   justify-content: flex-end;
 }
 
-/* =========================================
-   텍스트 / 기타
-   ========================================= */
-
+/* ── 텍스트 ── */
 .admin-text {
   font-size: 13px;
   margin: 3px 0;
-  color: #4c2f1f;
+  color: #4a3622;
 }
 
 .admin-reserv-code {
   font-weight: 600;
-  color: #c87c2b;
+  color: #8a5a10;
+  font-family: 'Courier New', monospace;
 }
 
-/* =========================================
-   영화 카드 - 포스터 / 시간
-   ========================================= */
-
+/* ── 영화 카드 ── */
 .admin-movie-poster-wrap {
-  margin-top: 6px;
+  margin-top: 8px;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -427,59 +402,42 @@
 
 .admin-movie-poster {
   width: 100%;
-  max-height: 240px;
+  max-height: 230px;
   object-fit: cover;
-  border-radius: 10px;
-  border: 1px solid rgba(123, 89, 59, 0.65);
+  border-radius: 8px;
+  border: 1px solid rgba(150,100,50,0.4);
 }
 
 .admin-movie-times {
-  margin-top: 6px;
-  border-top: 1px dashed rgba(116, 83, 57, 0.55);
-  padding-top: 4px;
+  margin-top: 8px;
+  border-top: 1px dashed rgba(138,97,49,0.35);
+  padding-top: 6px;
 }
 
-/* =========================================
-   유저 카드 - 프로필
-   ========================================= */
-
+/* ── 유저 카드 ── */
 .admin-user-profile {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   margin-top: 4px;
 }
 
 .admin-user-profile-img {
-  width: 90px;
-  height: 90px;
-  border-radius: 999px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
   object-fit: cover;
-  border: 2px solid rgba(129, 94, 64, 0.8);
-  box-shadow: 0 6px 14px rgba(75, 48, 28, 0.6);
+  border: 2px solid rgba(212,166,77,0.55);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.35);
 }
 
-.admin-user-info {
-  margin-top: 6px;
-}
+.admin-user-info { margin-top: 6px; }
 
-/* =========================================
-   반응형
-   ========================================= */
-
+/* 반응형 */
 @media (max-width: 768px) {
-  .admin-main {
-    padding: 18px 16px 32px;
-  }
-
+  .admin-main { padding: 18px 16px 36px; }
   .admin-header-inner,
-  .admin-management-toolbar {
-    padding-left: 16px;
-    padding-right: 16px;
-  }
-
-  .admin-login-card {
-    margin-top: 40px;
-  }
+  .admin-management-toolbar { padding-left: 16px; padding-right: 16px; }
+  .admin-login-card { margin-top: 40px; }
 }

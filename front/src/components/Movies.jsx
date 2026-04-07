@@ -1,6 +1,7 @@
 import MainHeader from "../Main/MainHeader";
 import { useState, useEffect, useRef } from "react";
 import "../css/Movies.css";
+import { API } from '../api.js';
 
 function Movies() {
   const [movies, setMovies] = useState([]);
@@ -12,14 +13,14 @@ function Movies() {
 
   // 영화 리스트 불러오기
   useEffect(() => {
-    fetch("http://192.168.0.228:3000/movies")
+    fetch(`${API}/movies`)
       .then((res) => res.json())
       .then((data) => setMovies(data));
   }, []);
 
   // 영화 정보 불러오기
   useEffect(() => {
-    fetch("http://192.168.0.228:3000/movieinfo")
+    fetch(`${API}/movieinfo`)
       .then((response) => response.json())
       .then((data) => setMovieData(data));
   }, []);
@@ -69,7 +70,7 @@ function Movies() {
           >
             <div className="movie-poster-box">
               <img
-                src={`http://192.168.0.228:3000${movie.poster}`}
+                src={`${API}${movie.poster}`}
                 alt={movie.title}
               />
             </div>

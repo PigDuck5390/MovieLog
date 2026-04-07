@@ -1,0 +1,2 @@
+/* App 전역 리셋 — 세부 스타일은 index.css와 각 컴포넌트 CSS에서 처리 */
+* { box-sizing: border-box; }

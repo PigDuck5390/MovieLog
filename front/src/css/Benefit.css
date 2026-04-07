@@ -1,4 +1,49 @@
-.benefit-poster{
-    margin-left: 428px;
-    margin-top: 2px;
+/* ================================================
+   MOVIELOG — 혜택 페이지
+   ================================================ */
+
+/* 페이지 전체 배경 */
+body:has(img.benefit-poster) {
+  background:
+    radial-gradient(ellipse at 20% 0%, #6b3a1f 0%, transparent 45%),
+    linear-gradient(170deg, #4a2810 0%, #8a6131 40%, #a97f3f 100%);
+  min-height: 100vh;
+}
+
+/* 포스터를 감싸는 부모 div */
+div:has(> img.benefit-poster) {
+  display: flex;
+  justify-content: center;
+  padding: 0 80px;
+  margin-bottom: 24px;
+  animation: fadeInUp 0.5s ease both;
+}
+
+/* 개별 포스터 이미지 */
+img.benefit-poster {
+  width: 100%;
+  max-width: 800px;
+  height: auto;
+  border-radius: 8px;
+  display: block;
+  box-shadow:
+    0 18px 45px rgba(0,0,0,0.5),
+    0 0 0 3px rgba(212,166,77,0.3),
+    0 0 0 6px rgba(180,120,55,0.15);
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.28s ease, box-shadow 0.28s ease;
+}
+
+img.benefit-poster:hover {
+  transform: translateY(-5px) scale(1.005);
+  box-shadow:
+    0 30px 60px rgba(0,0,0,0.6),
+    0 0 0 3px rgba(212,166,77,0.55),
+    0 0 0 6px rgba(180,120,55,0.25);
+}
+
+/* 첫 번째 이미지 전에 페이지 타이틀 삽입 효과 */
+div:has(> img.benefit-poster):first-of-type {
+  margin-top: 60px;
 }

@@ -1,90 +1,197 @@
-/* 페이지 전체를 Join 전용으로 한정 */
+/* ================================================
+   MOVIELOG — 회원가입 페이지 (Login과 동일 컨셉)
+   ================================================ */
+
 .join-page {
-    background-color: #8C611C;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    padding: 0;
-    width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background:
+    radial-gradient(ellipse at 30% 20%, #6b3a1f 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 80%, #3b1e0a 0%, transparent 50%),
+    linear-gradient(160deg, #4a2810 0%, #8a6131 50%, #a97f3f 100%);
+  padding: 24px;
 }
 
-/* 종이 */
+/* 종이 카드 */
 .join-container {
-    height: 700px;
-    width: 460px;
-    padding: 50px 60px;
-    background: #f8f6f2;
-    border-radius: 4px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    position: relative;
+  position: relative;
+  width: 440px;
+  padding: 52px 56px 48px;
+  background:
+    radial-gradient(ellipse at 50% 0%, #fffdf5 0%, #fdf6e3 40%, #f8efd4 100%);
+  border-radius: 3px;
+  animation: bookOpen 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  box-shadow:
+    0 28px 55px rgba(0,0,0,0.5),
+    4px 0 0 #f0ddb8,
+    8px 0 0 #e8d0a4,
+    12px 0 0 #dcbe8a,
+    16px 0 0 #ceac74,
+    inset 0 0 40px rgba(180,140,70,0.06);
 }
 
+.join-container::before {
+  content: '';
+  position: absolute;
+  left: 38px;
+  top: 12px;
+  bottom: 12px;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(180,120,60,0.3) 10%,
+    rgba(180,120,60,0.3) 90%,
+    transparent 100%
+  );
+}
+
+.join-container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 3px;
+  background: repeating-linear-gradient(
+    180deg,
+    transparent 0,
+    transparent 27px,
+    rgba(160,120,70,0.07) 27px,
+    rgba(160,120,70,0.07) 28px
+  );
+  pointer-events: none;
+}
+
+/* 제목 */
 .join-title {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 100px;
+  margin: 0 0 32px;
+  font-family: var(--font-serif, 'Noto Serif KR', serif);
+  font-size: 28px;
+  font-weight: 900;
+  color: #2c1d0e;
+  text-align: center;
+  letter-spacing: 0.18em;
+  position: relative;
+  z-index: 1;
+}
+
+.join-title::after {
+  content: '';
+  display: block;
+  width: 48px;
+  height: 2px;
+  margin: 10px auto 0;
+  background: linear-gradient(to right, transparent, #d4a64d, transparent);
 }
 
 /* 만년필 아이콘 */
 .join-pen-icon {
-    position: absolute;
-    top: 60px;
-    right: 60px;
-    width: 60px;
-    opacity: 0.9;
-    transform: rotate(-10deg);
+  position: absolute;
+  top: 52px;
+  right: 48px;
+  width: 54px;
+  opacity: 0.75;
+  transform: rotate(-12deg);
+  transform-origin: center bottom;
+  animation: quillWrite 3.5s ease-in-out infinite;
+  z-index: 2;
 }
 
 /* 라벨 */
 .join-label {
-    font-size: 18px;
-    color: #333;
-    display: block;
-    margin-top: 25px;
+  display: block;
+  margin-top: 22px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #7a5a35;
+  position: relative;
+  z-index: 1;
 }
 
-/* 입력 라인 */
+/* 입력 필드 */
 .join-input {
-    width: 100%;
-    border: none;
-    border-bottom: 1px solid rgba(0,0,0,0.4);
-    padding: 8px 5px;
-    font-size: 18px;
-    background: transparent;
-    outline: none;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  border: none;
+  border-bottom: 1.5px solid rgba(100,70,35,0.3);
+  padding: 8px 4px;
+  font-size: 16px;
+  font-family: var(--font-sans, 'Noto Sans KR', sans-serif);
+  background: transparent;
+  outline: none;
+  color: #2c1d0e;
+  transition: border-color 0.2s;
+}
+
+.join-input::placeholder {
+  color: rgba(100,70,35,0.3);
+  font-size: 14px;
 }
 
 .join-input:focus {
-    border-bottom: 1.5px solid #000;
-}
-
-/* 버튼 */
-.join-submit-btn {
-    float: right;
-    margin-top: 40px;
-    font-size: 20px;
-    background: none;
-    border: none;
-    color: #2a1c02;
-    cursor: pointer;
-    padding: 0;
-    font-weight: 600;
-    border-bottom: 2px solid #c17b7b;
-}
-
-.join-submit-btn:hover {
-    color: #a40000;
-    border-bottom-color: #a40000;
+  border-bottom-color: #8a6131;
 }
 
 /* 로그인 이동 링크 */
 .join-link {
-    margin-top: 40px;
-    display: inline-block;
-    font-size: 16px;
-    color: #4a3420;
-    text-decoration: underline;
-    cursor: pointer;
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  margin-top: 28px;
+  font-size: 13px;
+  color: #7a5a35;
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(122,90,53,0.5);
+  letter-spacing: 0.05em;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.join-link:hover {
+  color: #a8362a;
+  border-bottom-color: #a8362a;
+}
+
+/* 가입 버튼 */
+.join-submit-btn {
+  position: relative;
+  z-index: 1;
+  float: right;
+  margin-top: 28px;
+  padding: 0;
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #2c1d0e;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  transition: color 0.2s;
+}
+
+.join-submit-btn::after {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(to right, #d4a64d, #8b2012);
+  border-radius: 1px;
+  transition: background 0.2s;
+}
+
+.join-submit-btn:hover {
+  color: #8b2012;
+}
+
+.join-submit-btn:hover::after {
+  background: #8b2012;
 }

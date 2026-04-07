@@ -1,48 +1,60 @@
 import ManagementHead from '../ManagementHead.jsx'
 import { useState, useEffect } from 'react'
-
 import baseImg from '../../img/기본프로필.png'
+import { API } from '../../api.js'
 
 function ManageUser() {
 
     const [userData, setUserData] = useState([])
 
+    // infinite re-render 수정: [] 사용
     useEffect(() => {
-        fetch("http://192.168.0.228:3000/userinfo")
+        fetch(`${API}/userinfo`)
             .then(response => response.json())
             .then(data => setUserData(data))
-    }, [userData])
+    }, [])
 
     function deleteUser(defid) {
         const confirm = window.confirm(
             "삭제되면 다시는 복구할 수 없습니다. 정말로 해당 유저를 삭제하시겠습니까?")
-        if (!confirm) {
-            return;
-        }
-        fetch(`http://192.168.0.228:3000/deleteuser`, {
-            method: "DELETE"
-            , headers: {
-                "Content-Type": "application/json"
-            },
+        if (!confirm) return
+        fetch(`${API}/deleteuser`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ defid: defid })
+        }).then(() => {
+            alert("해당 유저가 삭제되었습니다.")
+            window.location.reload()
         })
-        alert("해당 유저가 삭제되었습니다.")
     }
 
     function setProfile(defid) {
         const confirm = window.confirm(
             "기존 프로필을 복구할 수 없습니다. 정말로 기본 프로필로 변경하시겠습니까?")
-        if (!confirm) {
-            return;
-        }
-        fetch(`http://192.168.0.228:3000/setdefaultprofile`, {
-            method: "PUT"
-            , headers: {
-                "Content-Type": "application/json"
-            },
+        if (!confirm) return
+        fetch(`${API}/setdefaultprofile`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ defid: defid })
+        }).then(() => {
+            alert("기본 프로필로 변경되었습니다.")
+            window.location.reload()
         })
-        alert("기본 프로필로 변경되었습니다.")
+    }
+
+    function handleProfileChange(e, defid) {
+        const file = e.target.files[0]
+        if (!file) return
+        const formData = new FormData()
+        formData.append('profile', file)
+        formData.append('defid', defid)
+        fetch(`${API}/admin/updateprofile`, {
+            method: 'PUT',
+            body: formData
+        }).then(() => {
+            alert('프로필 사진이 변경되었습니다.')
+            window.location.reload()
+        })
     }
 
     function userEdit(id, item, itemKey) {
@@ -51,7 +63,7 @@ function ManageUser() {
             alert("내용이 입력되지 않았습니다.")
             return
         }
-        fetch('http://192.168.0.228:3000/userupdate', {
+        fetch(`${API}/userupdate`, {
             method: "PUT",
             headers: { "content-type": "application/json" },
             body: JSON.stringify({
@@ -59,8 +71,7 @@ function ManageUser() {
                 field: itemKey,
                 newData: newData
             })
-        }
-        )
+        }).then(() => window.location.reload())
     }
 
     return (
@@ -88,13 +99,12 @@ function ManageUser() {
                                     <p className="admin-label">프로필 사진</p>
                                     <img
                                         className="admin-user-profile-img"
-                                        src={`${item.profile ?
-                                            `http://192.168.0.228:3000${item.profile}` : baseImg}`}
+                                        src={item.profile ? `${API}${item.profile}` : baseImg}
                                         alt={item.profile_name}
                                     />
                                     <button
                                         className="admin-button admin-button--small"
-                                        onClick={(e) => setProfile(item.defid)}
+                                        onClick={() => setProfile(item.defid)}
                                     >
                                         기본 프로필로 변경
                                     </button>
@@ -105,7 +115,7 @@ function ManageUser() {
                                         이름 : {item.name}
                                         <button
                                             className="admin-button admin-button--tiny"
-                                            onClick={(e) => userEdit(item.defid, item.name, "name")}
+                                            onClick={() => userEdit(item.defid, item.name, "name")}
                                         >
                                             이름 변경
                                         </button>
@@ -115,7 +125,7 @@ function ManageUser() {
                                         아이디 : {item.id}
                                         <button
                                             className="admin-button admin-button--tiny"
-                                            onClick={(e) => userEdit(item.defid, item.id, "id")}
+                                            onClick={() => userEdit(item.defid, item.id, "id")}
                                         >
                                             아이디 변경
                                         </button>
@@ -125,7 +135,7 @@ function ManageUser() {
                                         비밀번호 : {item.pw}
                                         <button
                                             className="admin-button admin-button--tiny"
-                                            onClick={(e) => userEdit(item.defid, item.pw, "pw")}
+                                            onClick={() => userEdit(item.defid, item.pw, "pw")}
                                         >
                                             비밀번호 변경
                                         </button>
@@ -135,7 +145,7 @@ function ManageUser() {
                                         보유포인트 : {item.point}
                                         <button
                                             className="admin-button admin-button--tiny"
-                                            onClick={(e) => userEdit(item.defid, item.point, "point")}
+                                            onClick={() => userEdit(item.defid, item.point, "point")}
                                         >
                                             포인트 수정
                                         </button>

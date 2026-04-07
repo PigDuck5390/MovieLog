@@ -1,184 +1,347 @@
+/* ================================================
+   MOVIELOG — 개인정보 변경 페이지 (책 양식 스타일)
+   ================================================ */
+
+/* ── 공유 레이아웃 (mypage-wrapper / mypage-menu) ── */
+.mypage-wrapper {
+  display: flex;
+  gap: 0;
+  padding: 60px 72px;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 20% 0%, #6b3a1f 0%, transparent 50%),
+    linear-gradient(170deg, #4a2810 0%, #8a6131 40%, #a97f3f 100%);
+  align-items: flex-start;
+}
+
+.mypage-menu {
+  width: 240px;
+  flex-shrink: 0;
+  background:
+    radial-gradient(ellipse at 50% 0%, #fdf8ee 0%, #f8efd4 60%, #f0d9a8 100%);
+  padding: 28px 24px;
+  border-radius: 6px;
+  box-shadow:
+    0 16px 36px rgba(0,0,0,0.4),
+    0 0 0 2px #f0ddb8,
+    0 0 0 4px #e0c898;
+  height: fit-content;
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp 0.45s ease both;
+}
+
+.mypage-menu::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(to right, transparent, #d4a64d 30%, #d4a64d 70%, transparent);
+}
+
+.menu-title {
+  font-family: var(--font-serif, 'Noto Serif KR', serif);
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0 0 20px;
+  color: #2c1d0e;
+  letter-spacing: 0.12em;
+  padding-bottom: 14px;
+  border-bottom: 1px dashed rgba(138,97,49,0.4);
+}
+
+.menu-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-list li {
+  position: relative;
+  padding: 12px 0 12px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: #5a3a22;
+  border-bottom: 1px solid rgba(180,130,70,0.15);
+  cursor: pointer;
+  transition: color 0.2s, padding-left 0.2s;
+}
+
+.menu-list li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 0;
+  background: #d4a64d;
+  border-radius: 2px;
+  transition: height 0.2s;
+}
+
+.menu-list li:hover {
+  color: #2c1d0e;
+  font-weight: 700;
+  padding-left: 20px;
+}
+
+.menu-list li:hover::before { height: 60%; }
+.menu-list li:last-child { border-bottom: none; }
+
+/* ── MyInfoEdit 전용 우측 영역 ── */
 .myinfo-wrapper {
-    width: 100%;
-    max-width: 900px;
-    margin-left: 120px;
-    padding: 20px;
+  flex: 1;
+  max-width: 860px;
+  margin-left: 48px;
+  animation: fadeInUp 0.55s 0.1s ease both;
 }
 
 .myinfo-title {
-    font-size: 32px;
-    font-weight: bold;
-    margin-bottom: 25px;
-    color: #222;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  font-family: var(--font-serif, 'Noto Serif KR', serif);
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  color: #fde8c0;
+  text-align: center;
+  margin: 0 0 28px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
 }
 
+.myinfo-title::after {
+  content: '';
+  display: block;
+  width: 56px;
+  height: 2px;
+  margin: 12px auto 0;
+  background: linear-gradient(to right, transparent, #d4a64d, transparent);
+}
+
+/* 카드 컨테이너 */
 .myinfo-card {
-    background: #ffffff;
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
+  background:
+    radial-gradient(ellipse at 50% 0%, #fdf8ee 0%, #f8efd4 60%, #f0d9a8 100%);
+  border-radius: 8px;
+  padding: 0;
+  box-shadow:
+    0 20px 45px rgba(0,0,0,0.42),
+    0 0 0 2px #f0ddb8,
+    0 0 0 5px #e0c898;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow: hidden;
+  position: relative;
 }
 
+.myinfo-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(to right, transparent, #d4a64d 30%, #d4a64d 70%, transparent);
+}
+
+/* 각 섹션 */
 .info-section {
-    border-bottom: 1px solid #eee;
-    padding-bottom: 30px;
+  padding: 32px 40px;
+  border-bottom: 1px solid rgba(180,130,70,0.2);
+  position: relative;
 }
 
-.info-section:last-child {
-    border-bottom: none;
-}
+.info-section:last-child { border-bottom: none; }
 
+/* 섹션 제목 */
 .section-title {
-    font-size: 22px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: #333;
+  font-family: var(--font-serif, 'Noto Serif KR', serif);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #2c1d0e;
+  margin: 0 0 22px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed rgba(138,97,49,0.35);
 }
 
+/* 입력 그룹 */
 .input-group {
-    margin-bottom: 15px;
-    display: flex;
-    flex-direction: column;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .input-group label {
-    font-size: 15px;
-    margin-bottom: 6px;
-    color: #444;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #7a5a35;
 }
 
+/* 인풋 (잉크 스타일) */
 .input-group input {
-    padding: 12px 14px;
-    border-radius: 10px;
-    border: 2px solid #ccc;
-    font-size: 16px;
-    transition: 0.2s;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(138,97,49,0.35);
+  background: rgba(253,248,238,0.85);
+  font-size: 15px;
+  font-family: var(--font-sans, 'Noto Sans KR', sans-serif);
+  color: #2c1d0e;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-group input::placeholder {
+  color: rgba(138,97,49,0.4);
 }
 
 .input-group input:focus {
-    border-color: #00c6e6;
-    box-shadow: 0 0 4px rgba(0, 198, 230, 0.4);
-    outline: none;
+  border-color: #8a6131;
+  background: rgba(253,248,238,1);
+  box-shadow:
+    0 0 0 3px rgba(212,166,77,0.22),
+    0 2px 5px rgba(0,0,0,0.1);
 }
-/* ===== 카드사 선택 드롭다운 ===== */
+
+/* 셀렉트 */
 .input-group select {
   width: 100%;
-  height: 48px; /* 인풋 높이와 동일 */
-  padding: 0 16px;
-  
-  background: #fff;
-  border: 2px solid #ccc;
-  border-radius: 10px;
+  height: 44px;
+  padding: 0 14px;
+  background: rgba(253,248,238,0.85);
+  border: 1px solid rgba(138,97,49,0.35);
+  border-radius: 6px;
   outline: none;
-  font-size: 15px;
-  color: #333;
+  font-size: 14px;
+  font-family: var(--font-sans, 'Noto Sans KR', sans-serif);
+  color: #3a2410;
   cursor: pointer;
-
-  transition: 0.25s;
-  -webkit-appearance: none; /* 브라우저 기본 화살표 제거 */
-  -moz-appearance: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
   appearance: none;
-
-  /* 오른쪽 화살표 아이콘 스타일 */
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%238a8a8a'%3E%3Cpath d='M4.5 6l3.5 3.5L11.5 6'/%3E%3C/svg%3E");
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%238a6131'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 14px center;
 }
 
-/* hover 효과 */
-.input-group select:hover {
-  border-color: #00c6e6;
-}
+.input-group select:hover { border-color: #8a6131; }
 
-/* focus 효과 */
 .input-group select:focus {
-  border-color: #00c6e6;
-  box-shadow: 0 0 4px rgba(0, 198, 230, 0.4);
+  border-color: #8a6131;
+  box-shadow: 0 0 0 3px rgba(212,166,77,0.22);
 }
 
+/* 변경 버튼 */
 .submit-btn {
-    margin-top: 10px;
-    padding: 12px 20px;
-    width: 160px;
-    background: #df8d12;
-    color: #fff;
-    font-size: 17px;
-    font-weight: bold;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: 0.2s;
+  margin-top: 8px;
+  padding: 10px 22px;
+  background: linear-gradient(to bottom, #9c6e38 0%, #5a3a1f 100%);
+  color: #fde8c0;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  border: 1px solid rgba(0,0,0,0.4);
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow:
+    0 4px 10px rgba(0,0,0,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.18);
+  transition: filter 0.18s, transform 0.16s, box-shadow 0.18s;
 }
 
 .submit-btn:hover {
-    background: #7a5a00;
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+  box-shadow:
+    0 7px 16px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.22),
+    0 0 8px rgba(212,166,77,0.2);
+}
+
+.submit-btn:active {
+  transform: translateY(1px);
+  filter: brightness(0.92);
 }
 
 /* 카드 아이템 */
-.card-item {
-  padding: 14px 16px;
-  border-radius: 12px;
-  border: 1px solid #eee;
-  background-color: #fafafa;
+.card-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-/* 상단 영역 (별명 + 수정 버튼) */
+.card-item {
+  padding: 16px 18px;
+  border-radius: 8px;
+  border: 1px solid rgba(180,130,70,0.25);
+  background: rgba(253,248,238,0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: box-shadow 0.18s, transform 0.18s;
+}
+
+.card-item:hover {
+  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+  transform: translateY(-1px);
+}
+
 .card-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-/* 카드 별명 강조 */
 .card-name {
-  font-size: 18px;
-  font-weight: 800;
-  color: #222;
+  font-size: 16px;
+  font-weight: 700;
+  color: #2c1d0e;
 }
 
-/* 수정 버튼 (기존 위치에서 이동) */
-.edit-btn {
-  background-color: #e0f7ff;
-  border: 1px solid #00c6e6;
-  padding: 6px 12px;
+.card-info span {
   font-size: 13px;
-  border-radius: 8px;
+  color: #6b4c2b;
+  display: block;
+  line-height: 1.7;
+}
+
+/* 수정 버튼 */
+.edit-btn {
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  background: rgba(212,166,77,0.15);
+  border: 1px solid rgba(212,166,77,0.5);
+  border-radius: 6px;
+  color: #6b4010;
   cursor: pointer;
-  transition: 0.2s;
+  transition: background 0.18s, border-color 0.18s;
 }
 
 .edit-btn:hover {
-  background-color: #c5eff9;
+  background: rgba(212,166,77,0.3);
+  border-color: #d4a64d;
 }
 
-/* 남은 카드 정보 */
-.card-info span {
-  font-size: 14px;
-  color: #444;
-}
-
-/* 삭제 버튼 (우측 하단에 하나만) */
+/* 삭제 버튼 */
 .delete-btn {
-  /* align-self: flex-end; */
-  background-color: #bb3737;
-  color: #fff;
-  font-size: 13px;
-  padding: 6px 12px;
-  border: 1px solid #740000;
-  border-radius: 8px;
+  align-self: flex-start;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  background: rgba(139,32,18,0.1);
+  border: 1px solid rgba(139,32,18,0.4);
+  border-radius: 6px;
+  color: #8b2012;
   cursor: pointer;
-  transition: 0.2s;
+  transition: background 0.18s, border-color 0.18s;
 }
 
 .delete-btn:hover {
-  background-color: #6b0000;
+  background: rgba(139,32,18,0.2);
+  border-color: #8b2012;
+  color: #6b1208;
 }

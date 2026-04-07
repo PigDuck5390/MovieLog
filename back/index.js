@@ -2,6 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const multer = require('multer')
 const path = require("path");
+const fs = require("fs");
 const app = express()
 const pool = require('./db')
 
@@ -11,30 +12,47 @@ app.use(cors())
 //정적 데이터를 읽을 파일 경로, 브라우저 URL 선언 및 연결
 app.use('/upload', express.static(path.join(__dirname, 'upload')));
 
+// 존재하지 않는 이미지 요청 → 폴더 내 비슷한 이름 파일 자동 매칭
+app.use('/upload', (req, res) => {
+  const decodedPath = decodeURIComponent(req.path);
+  const fullDir = path.join(__dirname, 'upload', path.dirname(decodedPath));
+  const reqName = path.basename(decodedPath).toLowerCase().replace(/[^a-z0-9가-힣]/g, '');
+
+  try {
+    const files = fs.readdirSync(fullDir);
+    const matched = files.find(f =>
+      f.toLowerCase().replace(/[^a-z0-9가-힣]/g, '').includes(reqName) ||
+      reqName.includes(f.toLowerCase().replace(/[^a-z0-9가-힣]/g, ''))
+    );
+    if (matched) {
+      return res.sendFile(path.join(fullDir, matched));
+    }
+  } catch (e) {}
+
+  res.status(404).send('Not found');
+});
+
 //신규 파일 저장경로 및 파일명 규칙 선언
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     if(req.path == '/benefit/add'){
       cb(null, path.join(__dirname, 'upload', 'benefit'))
-    }else if (req.path == '/updateProfile'){
+    }else if (req.path == '/updateProfile' || req.path == '/admin/updateprofile'){
       cb(null, path.join(__dirname, 'upload', 'profile'))
     }else if (req.path == '/event/add'){
       cb(null, path.join(__dirname, 'upload', 'event'))
-    }else if (req.path == '/movies/add'){
+    }else if (req.path == '/movies/add' || req.path == '/movies/updateposter'){
       cb(null, path.join(__dirname, 'upload', 'poster'))
     }
   },
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname)
-    const base = path.basename(file.originalname, ext)
-    cb(null, `${Date.now()}${'-'}${base}${ext}`)
+    cb(null, `${Date.now()}${ext}`)
   }
 });
 
 //멀터 변수화
 const upload = multer({ storage })
-
-
 
 // -------------------------------------------- //
 
@@ -200,6 +218,16 @@ app.get('/admin', async (req, res) =>{
   res.send(data)
 })
 
+//관리자 : 영화 포스터 파일 교체
+app.put('/movies/updateposter', upload.single('poster'), async (req, res) => {
+  const filePath = `/upload/poster/${req.file.filename}`;
+  await pool.query(
+    'UPDATE movie_info SET poster = ? WHERE movie_id = ?',
+    [filePath, req.body.movieId]
+  );
+  res.json({ success: true, poster: filePath });
+});
+
 //관리자 : 영화 수정
 app.put('/movies/update', async (req, res) => {
   await pool.query(
@@ -301,6 +329,16 @@ app.delete('/deleteuser', async (req, res) => {
   )
   }
 );
+
+//관리자 : 유저 프로필 사진 변경 (defid 기반)
+app.put('/admin/updateprofile', upload.single('profile'), async (req, res) => {
+  const filePath = `/upload/profile/${req.file.filename}`;
+  await pool.query(
+    'UPDATE user SET profile = ? WHERE defid = ?',
+    [filePath, req.body.defid]
+  );
+  res.json({ success: true, profile: filePath });
+});
 
 //관리자 : 유저 프로필 기본사진으로 변경
 app.put('/setdefaultprofile', async (req, res) => {

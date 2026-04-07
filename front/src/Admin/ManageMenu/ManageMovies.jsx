@@ -1,6 +1,7 @@
 import ManagementHead from '../ManagementHead.jsx'
 import { useState, useEffect } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
+import { API } from '../../api.js'
 
 
 function ManageMovies() {
@@ -10,11 +11,12 @@ function ManageMovies() {
 
     const navigate = useNavigate();
     
+    // infinite re-render 수정: [] 사용
     useEffect(() => {
-        fetch("http://192.168.0.228:3000/movies")
+        fetch(`${API}/movies`)
             .then(response => response.json())
             .then(data => setMovieData(data))
-    }, [movieData])
+    }, [])
 
     function edit(id, item, itemKey) {
         const newData = prompt("수정할 내용을 입력해주세요.", item)
@@ -22,7 +24,7 @@ function ManageMovies() {
             alert("내용이 입력되지 않았습니다.")
             return
         }
-        fetch('http://192.168.0.228:3000/movies/update', {
+        fetch(`${API}/movies/update`, {
             method: "PUT",
             headers: { "content-type": "application/json" },
             body: JSON.stringify({
@@ -30,20 +32,35 @@ function ManageMovies() {
                 field: itemKey,
                 newData: newData
             })
-        }
-        )
+        }).then(() => window.location.reload())
+    }
+
+    function handlePosterChange(e, movieId) {
+        const file = e.target.files[0]
+        if (!file) return
+        const formData = new FormData()
+        formData.append('poster', file)
+        formData.append('movieId', movieId)
+        fetch(`${API}/movies/updateposter`, {
+            method: 'PUT',
+            body: formData
+        }).then(res => res.json())
+          .then(() => {
+              alert('포스터가 변경되었습니다.')
+              window.location.reload()
+          })
     }
 
     function del(id) {
         const confirm = window.confirm("정말로 삭제하시겠습니까?")
         if (confirm) {
-            fetch(`http://192.168.0.228:3000/movies/delete`, {
-                method: "DELETE"
-                , headers: { "content-type": "application/json" },
+            fetch(`${API}/movies/delete`, {
+                method: "DELETE",
+                headers: { "content-type": "application/json" },
                 body: JSON.stringify({
                     movieId: id
                 })
-            })
+            }).then(() => window.location.reload())
         }
     }
 
@@ -52,7 +69,7 @@ function ManageMovies() {
         for (const key in newMovieData) {
             formData.append(key, newMovieData[key])
         }
-        fetch('http://192.168.0.228:3000/movies/add', {
+        fetch(`${API}/movies/add`, {
             method: "POST",
             body: formData
         })
@@ -374,13 +391,19 @@ function ManageMovies() {
                                         <span className="admin-label-inline">포스터</span>
                                         <img
                                             className="admin-movie-poster"
-                                            src={`http://192.168.0.228:3000${item.poster}`}
+                                            src={`${API}${item.poster}`}
                                             alt={`${item.title} 포스터`}
+                                        />
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            id={`poster-input-${item.movie_id}`}
+                                            style={{ display: 'none' }}
+                                            onChange={(e) => handlePosterChange(e, item.movie_id)}
                                         />
                                         <button
                                             className="admin-button admin-button--tiny"
-                                            onClick={(e) => edit(
-                                                item.movie_id, item.poster, "poster")}
+                                            onClick={() => document.getElementById(`poster-input-${item.movie_id}`).click()}
                                         >
                                             포스터 수정
                                         </button>

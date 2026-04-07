@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import pen from "../img/pen.jpg";
 import "../css/Join.css";
+import { API } from '../api.js';
 
 function Join() {
     const navigate = useNavigate();
@@ -14,7 +15,7 @@ function Join() {
 
     //회원정보 조회
     useEffect(() => {
-        fetch("http://192.168.0.228:3000/userinfo")
+        fetch(`${API}/userinfo`)
             .then(response => response.json())
             .then(data => setUserData(data));
     }, []);
@@ -25,7 +26,7 @@ function Join() {
             if (!userData.some(item => item.id === id)) {
                 if (pw === checkPw) {
                     //회원가입 실행
-                    fetch("http://192.168.0.228:3000/join", {
+                    fetch(`${API}/join`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({

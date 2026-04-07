@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import MainHeader from "../Main/MainHeader";
 import "../css/MyInfoEdit.css";
+import { API } from '../api.js';
 
 function MyInfo() {
     const { state: userInfo } = useLocation();
@@ -18,19 +19,19 @@ function MyInfo() {
     const [cardData, setCardData] = useState([])
     const [bank, setBank] = useState("")
 
-    //유저정보 조회
+    //유저정보 조회 (infinite re-render 수정: [] 사용)
     useEffect(()=>{
-        fetch("http://192.168.0.228:3000/userinfo")
+        fetch(`${API}/userinfo`)
         .then(response=>response.json())
         .then(data=>setUserData(data))
-    },[userData])
+    },[])
 
-    //카드정보 조회
+    //카드정보 조회 (infinite re-render 수정: [] 사용)
     useEffect(()=>{
-        fetch("http://192.168.0.228:3000/cardinfo")
+        fetch(`${API}/cardinfo`)
         .then(response => response.json())
         .then(data=>setCardData(data))
-    },[cardData])
+    },[])
 
     //내 정보 이동
     function goMyInfo() {
@@ -58,7 +59,7 @@ function MyInfo() {
             alert("비밀번호 확인이 일치하지 않습니다.");
             return;
         }
-        fetch("http://192.168.0.228:3000/changePassword", {
+        fetch(`${API}/changePassword`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -81,7 +82,7 @@ function MyInfo() {
             alert("이름이 일치하지 않습니다.");
             return;
         }
-        fetch("http://192.168.0.228:3000/changeName", {
+        fetch(`${API}/changeName`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -109,7 +110,7 @@ function MyInfo() {
         if(cardRegex.test(newCard)){
             if(cardDateRegex.test(newCardDate)){
                 if(!bank == ""){
-                    fetch("http://192.168.0.228:3000/newcard",{
+                    fetch(`${API}/newcard`,{
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -148,7 +149,7 @@ function MyInfo() {
     function cardNameEdit(defid, name) {
         const newName = prompt("새로운 카드 별명을 입력해주세요.", name)
         if(newName){
-            fetch("http://192.168.0.228:3000/cardnameupdate",{
+            fetch(`${API}/cardnameupdate`,{
                 method:"PUT",
                 headers:{"content-type":"application/json"},
                 body: JSON.stringify({
@@ -163,7 +164,7 @@ function MyInfo() {
     function cardDelete(defid) {
         const yes = confirm("진짜 지울거니?")
         if(yes){
-            fetch("http://192.168.0.228:3000/carddelete",{
+            fetch(`${API}/carddelete`,{
             method: "DELETE",
             headers:{"content-type":'application/json'},
             body: JSON.stringify({defid : defid})

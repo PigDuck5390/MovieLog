@@ -1,5 +1,6 @@
 import ManagementHead from '../ManagementHead.jsx'
 import { useState, useEffect } from 'react'
+import { API } from '../../api.js'
 
 function ManageReserv() {
 
@@ -8,11 +9,12 @@ function ManageReserv() {
 
     const today = new Date().toISOString().split('T')[0];
 
+    // infinite re-render 수정: [] 사용
     useEffect(() => {
-        fetch("http://192.168.0.228:3000/seatlist")
+        fetch(`${API}/seatlist`)
             .then(response => response.json())
             .then(data => setReservData(data))
-    }, [reservData])
+    }, [])
 
     function reservAdd() {
         const confirm = window.confirm(
@@ -20,7 +22,7 @@ function ManageReserv() {
         if (!confirm) {
             return
         }
-        fetch('http://192.168.0.228:3000/seat/add', {
+        fetch(`${API}/seat/add`, {
             method: "POST",
             headers: { "content-type": "application/json" },
             body: JSON.stringify(newReservData),
@@ -34,7 +36,7 @@ function ManageReserv() {
             alert("내용이 입력되지 않았습니다.")
             return
         }
-        fetch('http://192.168.0.228:3000/seat/update', {
+        fetch(`${API}/seat/update`, {
             method: "PUT",
             headers: { "content-type": "application/json" },
             body: JSON.stringify({
@@ -42,19 +44,16 @@ function ManageReserv() {
                 field: itemKey,
                 newData: newData
             })
-        }
-        )
+        })
     }
 
     function reservDel(id) {
         const confirm = window.confirm("임의로 예매를 추가하는 것은 특수한 경우가 아니라면 권장하지 않습니다. 계속하시겠습니까?")
         if (confirm) {
-            fetch(`http://192.168.0.228:3000/seat/delete`, {
+            fetch(`${API}/seat/delete`, {
                 method: "DELETE",
                 headers: { "content-type": "application/json" },
-                body: JSON.stringify({
-                    seatId: id
-                })
+                body: JSON.stringify({ seatId: id })
             })
         }
     }
@@ -78,11 +77,7 @@ function ManageReserv() {
                                     type="text"
                                     placeholder='예매자 이름'
                                     value={newReservData.userName || ''}
-                                    onChange={(e) => setNewReservData(
-                                        {
-                                            ...newReservData,
-                                            userName: e.target.value
-                                        })}
+                                    onChange={(e) => setNewReservData({ ...newReservData, userName: e.target.value })}
                                 />
                             </div>
 
@@ -93,11 +88,7 @@ function ManageReserv() {
                                     type="text"
                                     placeholder='예매자 아이디'
                                     value={newReservData.user_id || ''}
-                                    onChange={(e) => setNewReservData(
-                                        {
-                                            ...newReservData,
-                                            user_id: e.target.value
-                                        })}
+                                    onChange={(e) => setNewReservData({ ...newReservData, user_id: e.target.value })}
                                 />
                             </div>
 
@@ -108,11 +99,7 @@ function ManageReserv() {
                                     type="text"
                                     placeholder='영화 제목'
                                     value={newReservData.movie_name || ''}
-                                    onChange={(e) => setNewReservData(
-                                        {
-                                            ...newReservData,
-                                            movie_name: e.target.value
-                                        })}
+                                    onChange={(e) => setNewReservData({ ...newReservData, movie_name: e.target.value })}
                                 />
                             </div>
 
@@ -123,11 +110,7 @@ function ManageReserv() {
                                     type="date"
                                     value={newReservData.date || ''}
                                     min={today}
-                                    onChange={(e) => setNewReservData(
-                                        {
-                                            ...newReservData,
-                                            date: e.target.value
-                                        })}
+                                    onChange={(e) => setNewReservData({ ...newReservData, date: e.target.value })}
                                 />
                             </div>
                         </div>
@@ -140,11 +123,7 @@ function ManageReserv() {
                                     type="text"
                                     placeholder='00:00'
                                     value={newReservData.time || ''}
-                                    onChange={(e) => setNewReservData(
-                                        {
-                                            ...newReservData,
-                                            time: e.target.value
-                                        })}
+                                    onChange={(e) => setNewReservData({ ...newReservData, time: e.target.value })}
                                 />
                             </div>
 
@@ -155,11 +134,7 @@ function ManageReserv() {
                                     type="text"
                                     placeholder='ex) A1,A2,A3'
                                     value={newReservData.seat_num || ''}
-                                    onChange={(e) => setNewReservData(
-                                        {
-                                            ...newReservData,
-                                            seat_num: e.target.value
-                                        })}
+                                    onChange={(e) => setNewReservData({ ...newReservData, seat_num: e.target.value })}
                                 />
                             </div>
 
@@ -170,11 +145,7 @@ function ManageReserv() {
                                     type="text"
                                     placeholder='관 빼고 숫자만 입력 ex) 1'
                                     value={newReservData.screen_num || ''}
-                                    onChange={(e) => setNewReservData(
-                                        {
-                                            ...newReservData,
-                                            screen_num: e.target.value
-                                        })}
+                                    onChange={(e) => setNewReservData({ ...newReservData, screen_num: e.target.value })}
                                 />
                             </div>
                         </div>
@@ -206,79 +177,44 @@ function ManageReserv() {
 
                                 <p className="admin-text">
                                     예매자 이름 : {item.userName}
-                                    <button
-                                        className="admin-button admin-button--tiny"
-                                        onClick={(e) => reservEdit(
-                                            item.seat_id, item.userName, "userName")}
-                                    >
-                                        수정
-                                    </button>
+                                    <button className="admin-button admin-button--tiny"
+                                        onClick={() => reservEdit(item.seat_id, item.userName, "userName")}>수정</button>
                                 </p>
 
                                 <p className="admin-text">
                                     예매자 아이디 : {item.user_id}
-                                    <button
-                                        className="admin-button admin-button--tiny"
-                                        onClick={(e) => reservEdit(
-                                            item.seat_id, item.user_id, "user_id")}
-                                    >
-                                        수정
-                                    </button>
+                                    <button className="admin-button admin-button--tiny"
+                                        onClick={() => reservEdit(item.seat_id, item.user_id, "user_id")}>수정</button>
                                 </p>
 
                                 <p className="admin-text">
                                     영화 제목 : {item.movie_name}
-                                    <button
-                                        className="admin-button admin-button--tiny"
-                                        onClick={(e) => reservEdit(
-                                            item.seat_id, item.movie_name, "movie_name")}
-                                    >
-                                        수정
-                                    </button>
+                                    <button className="admin-button admin-button--tiny"
+                                        onClick={() => reservEdit(item.seat_id, item.movie_name, "movie_name")}>수정</button>
                                 </p>
 
                                 <p className="admin-text">
                                     예매 날짜 : {item.date}
-                                    <button
-                                        className="admin-button admin-button--tiny"
-                                        onClick={(e) => reservEdit(
-                                            item.seat_id, item.date, "date")}
-                                    >
-                                        수정
-                                    </button>
+                                    <button className="admin-button admin-button--tiny"
+                                        onClick={() => reservEdit(item.seat_id, item.date, "date")}>수정</button>
                                 </p>
 
                                 <p className="admin-text">
                                     예매 시간 : {item.time}
-                                    <button
-                                        className="admin-button admin-button--tiny"
-                                        onClick={(e) => reservEdit(
-                                            item.seat_id, item.time, "time")}
-                                    >
-                                        수정
-                                    </button>
+                                    <button className="admin-button admin-button--tiny"
+                                        onClick={() => reservEdit(item.seat_id, item.time, "time")}>수정</button>
                                 </p>
 
                                 <p className="admin-text seat-row">
                                     좌석 번호 : {item.seat_num.split(",").join(", ")}
-                                    <button
-                                        className="admin-button admin-button--tiny"
-                                        onClick={(e) => reservEdit(
-                                            item.seat_id, item.seat_num, "seat_num")}
-                                    >
-                                        수정
-                                    </button>
+                                    <button className="admin-button admin-button--tiny"
+                                        onClick={() => reservEdit(item.seat_id, item.seat_num, "seat_num")}>수정</button>
                                 </p>
 
                                 <p className="admin-text">
                                     상영관 : {item.screen_num}
-                                    <button
-                                        className="admin-button admin-button--tiny"
-                                        onClick={(e) => reservEdit(
-                                            item.seat_id, item.screen_num, "screen_num")}
-                                    >
-                                        수정
-                                    </button>
+                                    <button className="admin-button admin-button--tiny"
+                                        onClick={() => reservEdit(item.seat_id, item.screen_num, "screen_num")}>수정</button>
                                 </p>
                             </div>
                         )}
