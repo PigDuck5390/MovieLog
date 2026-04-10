@@ -134,6 +134,7 @@ app.post('/join', async (req, res) => {
   await pool.query('INSERT INTO user (name, id, pw, point) VALUES (?,?,?,?)',
     [req.body.userName, req.body.userId, req.body.userPw, 490]
   )
+  res.json({ success: true })
 })
 
 //프로필 사진 변경
@@ -172,6 +173,7 @@ app.post('/newcard', async (req, res) => {
   await pool.query(
     "INSERT INTO user_card (user_id, card_num, card_date, user_defid, card_bank, card_name) VALUES (?,?,?,?,?,?)",
     [req.body.userId, req.body.card, req.body.cardDate, req.body.defid, req.body.bank, req.body.name])
+  res.json({ success: true })
 })
 
 //카드 정보 호출

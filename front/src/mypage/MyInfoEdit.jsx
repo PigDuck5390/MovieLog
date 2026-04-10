@@ -101,7 +101,7 @@ function MyInfo() {
 
 
     //카드 등록
-    function cardSubmit() {
+    async function cardSubmit() {
         const user = userData.find(item=>item.id == userInfo.id)
 
         const cardRegex = /^\d{4}-\d{4}-\d{4}-\d{4}$/;
@@ -109,47 +109,44 @@ function MyInfo() {
 
         if(cardRegex.test(newCard)){
             if(cardDateRegex.test(newCardDate)){
-                if(!bank == ""){
-                    fetch(`${API}/newcard`,{
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        card: newCard,
-                        cardDate: newCardDate,
-                        userId: userInfo.id,
-                        defid: user.defid,
-                        bank: bank,
-                        name: newCardName
+                if(bank !== ""){
+                    await fetch(`${API}/newcard`,{
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            card: newCard,
+                            cardDate: newCardDate,
+                            userId: userInfo.id,
+                            defid: user.defid,
+                            bank: bank,
+                            name: newCardName
                         })
-                    }
-                    )
+                    })
                     alert("카드 등록이 완료되었습니다.")
                     setNewCardName("")
-                    setNewCard("")  
+                    setNewCard("")
                     setNewCardDate("")
-                    navigate('/myinfo', {
-                        state: {
-                            name: userInfo.name,
-                            id: userInfo.id
-                    }
-                    })
+                    setBank("")
+                    // 새로고침 없이 카드 목록 즉시 갱신
+                    const res = await fetch(`${API}/cardinfo`)
+                    const data = await res.json()
+                    setCardData(data)
                 }else{
                     alert("은행을 선택해주세요.")
                 }
             }else {
-                    alert("유효기간에 '/' 포함하여 올바르게 입력해주세요.")
-                }
+                alert("유효기간에 '/' 포함하여 올바르게 입력해주세요.")
+            }
         }else{
             alert("카드 번호에 '-' 포함하여 올바르게 입력해주세요.")
         }
-        
     }
 
     //카드 별명 수정
-    function cardNameEdit(defid, name) {
+    async function cardNameEdit(defid, name) {
         const newName = prompt("새로운 카드 별명을 입력해주세요.", name)
         if(newName){
-            fetch(`${API}/cardnameupdate`,{
+            await fetch(`${API}/cardnameupdate`,{
                 method:"PUT",
                 headers:{"content-type":"application/json"},
                 body: JSON.stringify({
@@ -157,19 +154,24 @@ function MyInfo() {
                     cardName: newName
                 })
             })
+            const res = await fetch(`${API}/cardinfo`)
+            const data = await res.json()
+            setCardData(data)
         }
     }
 
     //카드 삭제
-    function cardDelete(defid) {
+    async function cardDelete(defid) {
         const yes = confirm("진짜 지울거니?")
         if(yes){
-            fetch(`${API}/carddelete`,{
-            method: "DELETE",
-            headers:{"content-type":'application/json'},
-            body: JSON.stringify({defid : defid})
-            }
-            )
+            await fetch(`${API}/carddelete`,{
+                method: "DELETE",
+                headers:{"content-type":'application/json'},
+                body: JSON.stringify({defid : defid})
+            })
+            const res = await fetch(`${API}/cardinfo`)
+            const data = await res.json()
+            setCardData(data)
         }
     }
 

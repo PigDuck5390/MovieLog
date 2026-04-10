@@ -50,18 +50,18 @@ function Movies() {
     <>
       <MainHeader />
 
-      {/* 검색창 영역 */}
-      <div className="movie-search-box">
-        <input
-          type="text"
-          placeholder="영화 제목 검색"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <button onClick={handleSearch}>검색</button>
-      </div>
-
       <main className="movies-area">
+        {/* 검색창 영역 */}
+        <div className="movie-search-box">
+          <input
+            type="text"
+            placeholder="영화 제목 검색"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <button onClick={handleSearch}>검색</button>
+        </div>
+
         {movies.map((movie) => (
           <section
             key={movie.movie_id}
@@ -88,6 +88,7 @@ function Movies() {
           </section>
         ))}
       </main>
+
     </>
   );
 }

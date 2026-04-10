@@ -52,8 +52,8 @@ function VipLounge() {
 
     useEffect(() => {
         const host = window.location.hostname;
-        const wsUrl = host.startsWith("192.168")
-            ? "ws://192.168.0.227:3001"
+        const wsUrl = host.startsWith("192.168") || host === "localhost"
+            ? "ws://192.168.0.228:3001"
             : "ws://112.218.47.101:3001";
 
         const ws = new WebSocket(wsUrl);
@@ -68,12 +68,21 @@ function VipLounge() {
             }
         };
 
+        ws.onerror = () => {
+            console.log("WebSocket 연결 오류");
+        };
+
         return () => ws.close();
     }, []);
 
     const handleSend = () => {
         const trimmed = input.trim();
         if (!trimmed) return;
+
+        if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
+            alert("채팅 서버에 연결 중입니다. 잠시 후 다시 시도해주세요.");
+            return;
+        }
 
         const msg = {
             sender: userName,

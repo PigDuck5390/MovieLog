@@ -90,6 +90,7 @@ function Payment() {
         <>
             <MainHeader />
 
+            <div className="payment-page">
             <div className="payment-container">
                 <h1>결제 정보</h1>
 
@@ -132,6 +133,7 @@ function Payment() {
                 }}>
                     결제하기
                 </button>
+            </div>
             </div>
         </>
     );

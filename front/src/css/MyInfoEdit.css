@@ -8,10 +8,13 @@
   gap: 0;
   padding: 60px 72px;
   min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
   background:
     radial-gradient(ellipse at 20% 0%, #6b3a1f 0%, transparent 50%),
     linear-gradient(170deg, #4a2810 0%, #8a6131 40%, #a97f3f 100%);
   align-items: flex-start;
+  justify-content: center;
 }
 
 .mypage-menu {
@@ -91,8 +94,8 @@
 
 /* ── MyInfoEdit 전용 우측 영역 ── */
 .myinfo-wrapper {
-  flex: 1;
-  max-width: 860px;
+  flex: 0 1 820px;
+  max-width: 820px;
   margin-left: 48px;
   animation: fadeInUp 0.55s 0.1s ease both;
 }

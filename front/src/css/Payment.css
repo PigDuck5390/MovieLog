@@ -3,7 +3,7 @@
    ================================================ */
 
 /* 전체 페이지 배경 */
-body:has(.payment-container) {
+.payment-page {
   min-height: 100vh;
   background:
     radial-gradient(ellipse at 30% 0%, #6b3a1f 0%, transparent 50%),
@@ -12,8 +12,8 @@ body:has(.payment-container) {
 
 .payment-container {
   max-width: 720px;
-  margin: 52px auto;
-  padding: 0 24px 60px;
+  margin: 0 auto;
+  padding: 52px 24px 60px;
   animation: fadeInUp 0.55s ease both;
 }
 
