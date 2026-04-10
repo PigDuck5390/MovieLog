@@ -73,6 +73,26 @@
 ### VIP 라운지 (실시간 채팅)
 ![VIP 라운지](screen_shot/10_VIP_Lounge.png)
 
+### 관리자 페이지
+
+#### 관리자 로그인
+![관리자 로그인](screen_shot/11_Admin_Login.png)
+
+#### 영화 관리 (1)
+![영화 관리 1](screen_shot/12_Admin_Movie_1.png)
+
+#### 영화 관리 (2)
+![영화 관리 2](screen_shot/13_Admin_Movie_2.png)
+
+#### 예매 관리 (1)
+![예매 관리 1](screen_shot/14_Admin_Reserved_1.png)
+
+#### 예매 관리 (2)
+![예매 관리 2](screen_shot/15_Admin_Reserved_2.png)
+
+#### 회원 관리
+![회원 관리](screen_shot/16_Admin_Users.png)
+
 ---
 
 ## 주요 기능
